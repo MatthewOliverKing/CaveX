@@ -8,19 +8,19 @@ Here is the beautiful Alexandra Cave with active formations.
 ![Naracoorte Caves](https://i.imgur.com/5aG7TQX.jpg)
 
 Here's the team doing a scan.
-[Scanning](https://i.imgur.com/souMcaw.jpg)
+![Scanning](https://i.imgur.com/souMcaw.jpg)
 
 Here's the Naracoorte Cave system map courtesy of Craig Williams (UofA) that we are aiming to contribute to.
-[Cave Map](https://i.imgur.com/kqwxnCC.png)
+![Cave Map](https://i.imgur.com/kqwxnCC.png)
 
 ## Issues
 
 The foot tips are slipping, and the robot does not move in specified positive x-direction. Leg movements seem to be "cancelling out" due to hexagonal symmetry.
-[Gazebo](https://i.imgur.com/odcmgon.gif)
+![Gazebo](https://i.imgur.com/odcmgon.gif)
 
 The robot is not spawning in Rviz properly. Also, there is a mismatch between the coordinates in Gazebo and RViz (see the foot tip positions).
 
-[Rviz](https://i.imgur.com/AkRELXb.png)
+![Rviz](https://i.imgur.com/AkRELXb.png)
 
 ## Usage
 
