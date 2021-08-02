@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="simple_box"
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertia ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0" iyy="${m*(x*x+z*z)/12}" iyz = "0" izz="${m*(x*x+z*z)/12}" />
+  </xacro:macro>
+
+  <link name="box">
+
+    <inertial>
+      <mass value="1000.0" />
+      <xacro:box_inertia m="1.0" x="0.15" y="0.15" z="0.1"/>
+      <origin xyz="0 0 0.05"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.05"/>
+      <geometry>
+        <box size="0.15 0.15 0.1" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.05"/>
+      <geometry>
+        <box size="0.15 0.15 0.1" />
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="box"/>
+  </joint>
+
+  <gazebo reference="box">
+    <material>Gazebo/WoodPallet</material>
+  </gazebo>
+</robot>

@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2020 -->
+<!-- Commonwealth Scientific and Industrial Research Organisation (CSIRO) -->
+<!-- ABN 41 687 119 230 -->
+<!-- Written by Eranda Tennakoon <kulatunga.tennakoon@hdr.qut.edu.au> -->
+<!-- Modified by Benjamin Tam <benjamin.tam@data61.csiro.au> -->
+<!-- Modified by Samith Ashan <samith.ashan@data61.csiro.au> -->
+
+<robot name="hexapod_boxmodel"
+    xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="cylinder_inertia" params="m r h">
+        <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0" iyy="${m*(3*r*r+h*h)/12}" iyz = "0" izz="${m*r*r/2}" />
+    </xacro:macro>
+
+    <xacro:macro name="box_inertia" params="m x y z">
+        <inertia ixx="${m*(y*y+z*z)/12}" ixy = "0" ixz = "0" iyy="${m*(x*x+z*z)/12}" iyz = "0" izz="${m*(x*x+z*z)/12}" />
+    </xacro:macro>
+
+    <xacro:macro name="sphere_inertia" params="m r">
+        <inertia ixx="${2*m*r*r/5}" ixy = "0" ixz = "0" iyy="${2*m*r*r/5}" iyz = "0" izz="${2*m*r*r/5}" />
+    </xacro:macro>
+
+    <material name="black">
+        <color rgba= "0 0 0 1"/>
+    </material>
+    
+    <material name="grey">
+        <color rgba= "0.2 0.2 0.2 1"/>
+    </material>
+    
+    
+    
+    <!-- LEGS -->
+    
+    <xacro:macro name="leg" params="prefix index">
+
+        <!-- base_motor link (Base motor visual component is attached to the main body)-->     
+        
+        <link name="${prefix}_basem_link">
+            <visual>
+                <geometry>
+                    <cylinder length="${basemHeight}" radius="${basemRadius}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${basemHeight}" radius="${basemRadius}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${basemMass}"/>
+                <xacro:cylinder_inertia m="${basemMass}" r="${basemRadius}" h="${basemHeight}"/>
+            </inertial>
+        </link>
+        
+        <joint name="${prefix}_basem_joint" type="fixed">
+            <parent link="bottom_plate"/>
+            <child link="${prefix}_basem_link"/>
+            <origin xyz = "${bodyPlateRadius*cos(bodyPlateHexAngle/2+index*bodyPlateHexAngle)} ${bodyPlateRadius*sin(bodyPlateHexAngle/2+index*bodyPlateHexAngle)} ${bodyPlateOffset0/2}" rpy = "${basem_roll} ${basem_pitch} ${bodyPlateHexAngle/2+index*bodyPlateHexAngle+basem_yaw}"/>
+        </joint>
+        
+	
+        <!-- coxa link -->
+               
+        <link name="${prefix}_coxa_link">
+            <visual>
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/2XL-430.stl" scale="0.01 0.01 0.01"/>
+                </geometry>
+                <origin xyz="${coxaLength/2-top2axelA} 0 0" rpy="0 0 ${twoxl_yaw}"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/2XL-430.stl" scale="0.01 0.01 0.01"/>
+                </geometry>
+                <origin xyz="${coxaLength/2-top2axelA} 0 0" rpy="0 0 ${twoxl_yaw}"/>
+            </collision>
+            <inertial>
+                <mass value="${coxaMass}"/>
+                <xacro:box_inertia m="${coxaMass}" x="${coxaLength}" y="${coxaWidth}" z="${coxaHeight}"/>
+                <origin xyz="${coxaLength/2-top2axelA} 0 0" rpy="0 0 0"/>
+            </inertial>
+        </link>
+        
+        <joint name="${prefix}_coxa_joint" type="revolute">
+            <limit upper="${coxaupperlimit}" lower="${coxalowerlimit}" velocity="${coxavelocitylimit}" effort="${coxaeffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_basem_link"/>
+            <child link="${prefix}_coxa_link"/>
+            <origin xyz = "0 0 0" rpy = "${coxa_roll} ${coxa_pitch} ${coxa_yaw}"/>
+        </joint>
+        
+        <transmission name="${prefix}_coxa_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_coxa_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_coxa_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        
+        
+        <!-- femur link -->
+        
+        <link name="${prefix}_femur_link">
+            <visual name="femurPlate0">
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/topLegConnection.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <origin xyz="0 0 ${coxaWidth/2}" rpy="${femurplate_roll} 0 ${femurplate_yaw}"/>
+            </visual>
+            <visual name="femurPlate1">
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/topLegConnection.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <origin xyz="0 0 -${coxaWidth/2}" rpy="${femurplate_roll} 0 ${femurplate_yaw}"/>
+            </visual>
+            <visual name="XL">
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/XC-430.stl" scale="0.01 0.01 0.01"/>
+                </geometry>
+                <origin xyz="${axelB2axelC} 0 0" rpy="0 0 ${xl_yaw}"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${femurLength} ${femurHeight} ${femurWidth}"/>
+                </geometry>
+                <origin xyz="${femurLength/2} 0 0" rpy="0 0 0"/>
+            </collision>
+            <inertial>
+                <mass value="${femurMass}"/>
+                <xacro:box_inertia m="${femurMass}" x="${femurLength+xlHeight}" y="${femurHeight}" z="${femurWidth}"/>
+                <origin xyz="${(femurLength+xlHeight)/2} 0 0" rpy="0 0 0"/>
+            </inertial>
+        </link>
+        
+        <joint name="${prefix}_femur_joint" type="revolute">
+            <limit upper="${femurupperlimit}" lower="${femurlowerlimit}" velocity="${femurvelocitylimit}" effort="${femureffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_coxa_link"/>
+            <child link="${prefix}_femur_link"/>
+            <origin xyz = "${axelA2axelB} 0 0" rpy = "${femur_roll} ${femur_pitch} ${femur_yaw}"/>
+        </joint>
+        
+        <transmission name="${prefix}_femur_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_femur_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_femur_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+        
+        <!-- tibia link -->
+        
+        <link name="${prefix}_tibia_link">
+            <visual>
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/tibia.stl" scale="0.01 0.01 0.01"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${tibiaAssembly_roll} 0 ${tibiaAssembly_yaw}"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <mesh filename="package://cavex_hexapod/meshes/tibia.stl" scale="0.01 0.01 0.01"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${tibiaAssembly_roll} 0 ${tibiaAssembly_yaw}"/>
+            </collision>
+            <inertial>
+                <mass value="${tibiaMass}"/>
+                <xacro:cylinder_inertia m="${tibiaMass}" h="${tibiaLength}" r="${tibiaRadius}"/>
+                <origin xyz="${tibiaLength/2} 0 0" rpy="0 1.5708 0"/>
+            </inertial>
+        </link>
+        
+        <joint name="${prefix}_tibia_joint" type="revolute">
+            <limit upper="${tibiaupperlimit}" lower="${tibialowerlimit}" velocity="${tibiavelocitylimit}" effort="${tibiaeffortlimit}"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${defaultdamping}" friction="${defaultmu3}"/>
+            <parent link="${prefix}_femur_link"/>
+            <child link="${prefix}_tibia_link"/>
+            <origin xyz = "${axelB2axelC} 0 0" rpy = "${tibia_roll} ${tibia_pitch} ${tibia_yaw}"/>
+        </joint>
+        
+        <transmission name="${prefix}_tibia_tran">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_tibia_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_tibia_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
+	
+
+        <!--Gazebo specific tags  -->
+        
+        <!-- mu1, mu2 - Friction coefficients μ for the principal contact directions along the contact surface as defined by the Open Dynamics Engine (ODE) -->
+        <!-- kp, kd - Contact stiffness k_p and damping k_d for rigid body contacts as defined by ODE -->
+        <!-- material - Material of visual element -->
+        <!--selfCollide - If true, the link can collide with other links in the model. -->
+        <!-- minDepth - minimum allowable depth before contact correction impulse is applied -->
+        
+        <gazebo reference="${prefix}_basem_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <material>Gazebo/Grey</material>
+            <!--selfCollide>True</selfCollide-->
+            <gravity>True</gravity>
+        </gazebo>
+               
+        <gazebo reference="${prefix}_coxa_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <kp>1000000.0</kp>
+            <kd>400000000.0</kd>
+            <material>Gazebo/Black</material> 
+            <!--selfCollide>True</selfCollide-->
+            <gravity>True</gravity>
+        </gazebo> 
+      	
+        <gazebo reference="${prefix}_femur_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu2}</mu2>
+            <kp>1000000000.0</kp>
+            <kd>400000000.0</kd>         
+            <!--material>Gazebo/Black</material> -->
+            <!--selfCollide>True</selfCollide-->
+            <gravity>True</gravity>
+        </gazebo>
+        
+        <gazebo reference="${prefix}_tibia_link">
+            <mu1>${defaultmu1}</mu1>
+            <mu2>${defaultmu1}</mu2>
+            <minDepth>0.005</minDepth>
+            <kp>100000000000.0</kp>
+            <kd>400000000.0</kd>
+            <!--material>Gazebo/Black</material> -->
+            <!--selfCollide>True</selfCollide-->
+            <gravity>True</gravity>
+        </gazebo>
+
+    	
+    <!-- SPACERS -->	
+
+    </xacro:macro>
+    
+    	<xacro:macro name="spacer0" params="prefix index">
+	
+		<link name="${prefix}_spacer0_link">
+			<visual>
+				<geometry>
+					<mesh filename="package://cavex_hexapod/meshes/spacer.stl" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://cavex_hexapod/meshes/spacer.stl" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+			</collision>
+			<inertial>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<mass value="${spacerMass}"/>
+				<xacro:cylinder_inertia m="${spacerMass}" r="${spacerRadius}" h="${spacerHeight}"/>
+			</inertial>
+		</link>
+		
+		<joint name="${prefix}_spacer0_joint" type="fixed">
+			<parent link="mid_plate"/>
+			<child link="${prefix}_spacer0_link"/>
+			<origin xyz = "${(bodyPlateRadius-0.025)*cos(bodyPlateHexAngle/2+index*bodyPlateHexAngle)} ${(bodyPlateRadius-0.025)*sin(bodyPlateHexAngle/2+index*bodyPlateHexAngle)} ${bodyPlateHeight}" rpy = "${spacer_roll} ${spacer_pitch} ${spacer_yaw}"/>
+		</joint>
+	
+	</xacro:macro>
+	
+		<xacro:macro name="spacer1" params="prefix index">
+	
+		<link name="${prefix}_spacer1_link">
+			<visual>
+				<geometry>
+					<mesh filename="package://cavex_hexapod/meshes/spacer.stl" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://cavex_hexapod/meshes/spacer.stl" scale="0.001 0.001 0.001"/>
+				</geometry>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+			</collision>
+			<inertial>
+				<origin xyz="0 0 0" rpy="0 0 0"/>
+				<mass value="${spacerMass}"/>
+				<xacro:cylinder_inertia m="${spacerMass}" r="${spacerRadius}" h="${spacerHeight}"/>
+			</inertial>
+		</link>
+		
+		<joint name="${prefix}_spacer1_joint" type="fixed">
+			<parent link="mid_plate"/>
+			<child link="${prefix}_spacer1_link"/>
+			<origin xyz = "${(bodyPlateRadius-0.025)*cos(bodyPlateHexAngle/2+index*bodyPlateHexAngle)} ${(bodyPlateRadius-0.025)*sin(bodyPlateHexAngle/2+index*bodyPlateHexAngle)} ${bodyPlateHeight+bodyPlateOffset0}" rpy = "${spacer_roll} ${spacer_pitch} ${spacer_yaw}"/>
+		</joint>
+	
+	</xacro:macro>
+
+
+
+</robot>

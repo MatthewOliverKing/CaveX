@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2020 -->
+<!-- Commonwealth Scientific and Industrial Research Organisation (CSIRO) -->
+<!-- ABN 41 687 119 230 -->
+<!-- Written by Eranda Tennakoon <kulatunga.tennakoon@hdr.qut.edu.au> -->
+<!-- Modified by Benjamin Tam <benjamin.tam@data61.csiro.au> -->
+<!-- Modified by Fletcher Talbot <fletcher.talbot@csiro.au> -->
+<!-- Modified by Samith Ashan <samith.ashan@data61.csiro.au> -->
+
+<robot name="hexapod_model" 
+	xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+		</plugin>
+
+		<plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+			<alwaysOn>true</alwaysOn>
+			<bodyName>bottom_plate</bodyName>
+			<topicName>imu/data</topicName>
+			<serviceName>imu_service</serviceName>
+			<gaussianNoise>0.0</gaussianNoise>
+			<updateRate>20.0</updateRate>
+		</plugin>
+
+	</gazebo>
+
+	<gazebo reference="bottom_plate">
+		<material>Gazebo/Grey</material>
+		<selfCollide>True</selfCollide>
+		<gravity>True</gravity>
+	</gazebo>
+	
+	<gazebo reference="mid_plate">
+		<material>Gazebo/Grey</material>
+		<selfCollide>True</selfCollide>
+		<gravity>True</gravity>
+	</gazebo>
+	
+	<gazebo reference="top_plate">
+		<material>Gazebo/Grey</material>
+		<selfCollide>True</selfCollide>
+		<gravity>True</gravity>
+	</gazebo>
+	
+	<gazebo reference="puck">
+		<material>Gazebo/BlueGlow</material>
+		<selfCollide>True</selfCollide>
+		<gravity>True</gravity>
+	</gazebo>
+
+	<xacro:include filename="$(find cavex_hexapod)/robot/macros.xacro" />
+
+
+	<!-- model dimentions and parameters -->
+
+	<xacro:property name="bodyPlateHeight" value="0.003" />
+	<xacro:property name="bodyPlateRadius" value="0.152" />
+	<xacro:property name="bodyPlateHexAngle" value="1.04719755" />
+	<xacro:property name="bodyPlateOffset0" value="0.038" />
+	<xacro:property name="bodyPlateOffset1" value="0.045" />
+	<xacro:property name="bodyPlateMass" value="0.3" />
+
+	<!-- base_motor link -->
+	
+	<xacro:property name="basemHeight" value="0.039" />
+	<xacro:property name="basemRadius" value="0.01" />
+	<xacro:property name="basemMass" value="0.05" />
+
+	<xacro:property name="basem_yaw" value="0" />
+	<xacro:property name="basem_pitch" value="0" />
+	<xacro:property name="basem_roll" value="0" />
+
+
+	<!-- coxa link -->
+	
+	<xacro:property name="coxaWidth" value="0.03611" />
+	<xacro:property name="coxaLength" value="0.04645" />
+	<xacro:property name="coxaHeight" value="0.036" />
+	<xacro:property name="coxaMass" value="0.0982" />
+	<xacro:property name="top2axelA" value="0.0103" />
+	<xacro:property name="axelA2axelB" value="0.0235" />
+	
+	<xacro:property name="twoxl_yaw" value="1.5708" />
+
+	<xacro:property name="coxa_yaw" value="0" />
+	<xacro:property name="coxa_pitch" value="0" />
+	<xacro:property name="coxa_roll" value="0" />
+
+	<xacro:property name="coxaupperlimit" value="2.4" />
+	<xacro:property name="coxaupperlimit" value="2.4" />
+	<xacro:property name="coxalowerlimit" value="-2.4" />
+	<xacro:property name="coxaeffortlimit" value="8.4" />
+	<xacro:property name="coxavelocitylimit" value="2.35619449" />
+
+	<!-- femur link -->
+	
+	<xacro:property name="femurWidth" value="0.04" />
+	<xacro:property name="femurLength" value="0.11" />
+	<xacro:property name="femurHeight" value="0.046" />
+	<xacro:property name="femurMass" value="0.08" />
+	
+	<xacro:property name="femurplate_yaw" value="1.5708" />
+	<xacro:property name="femurplate_roll" value="1.5708" />
+	<xacro:property name="xl_yaw" value="-1.5708" />
+	<xacro:property name="xlHeight" value="0.0465" />
+	
+	<xacro:property name="femur_yaw" value="0" />
+	<xacro:property name="femur_pitch" value="0" />
+	<xacro:property name="femur_roll" value="1.5708" />
+
+	<xacro:property name="femurupperlimit" value="2.4" />
+	<xacro:property name="femurlowerlimit" value="-2.4" />
+	<xacro:property name="femureffortlimit" value="8.4" />
+	<xacro:property name="femurvelocitylimit" value="2.35619449" />
+
+	<!-- tibia link -->
+	
+	<xacro:property name="tibiaLength" value="0.186" />
+	<xacro:property name="tibiaWidth" value="0.038" />
+	<xacro:property name="tibiaRadius" value="0.015" />
+	<xacro:property name="tibiaMass" value="0.04" />
+	
+	<xacro:property name="tibiaAssembly_roll" value="-1.5708" />
+	<xacro:property name="tibiaAssembly_yaw" value="-1.5708" />
+	<xacro:property name="axelC2bolt" value="0.025" />
+	
+	<xacro:property name="axelB2axelC" value="0.139" />
+	<xacro:property name="tibia_yaw" value="0" />
+	<xacro:property name="tibia_pitch" value="0" />
+	<xacro:property name="tibia_roll" value="0" />
+
+	<xacro:property name="tibiaupperlimit" value="2.4" />
+	<xacro:property name="tibialowerlimit" value="-2.4" />
+	<xacro:property name="tibiaeffortlimit" value="8.4" />
+	<xacro:property name="tibiavelocitylimit" value="2.35619449" />
+
+	<!-- spacers -->
+	
+	<xacro:property name="spacerMass" value="0.005" />
+	<xacro:property name="spacerRadius" value="0.005" />
+	<xacro:property name="spacerHeight" value="0.038" />
+	
+	<xacro:property name="spacer_roll" value="1.5708" />
+	<xacro:property name="spacer_pitch" value="0" />
+	<xacro:property name="spacer_yaw" value="0" />
+	
+	<!-- puck -->
+	
+	<xacro:property name="puckMass" value="0.83" />
+	<xacro:property name="puckRadius" value="0.05165" />
+	<xacro:property name="puckHeight" value="0.0717" />
+
+
+	<!-- TODO: Set individual static friction values for links instead of default 0.2 -->
+	<xacro:property name="defaultmu1" value="200" />
+	<xacro:property name="defaultmu2" value="100" />
+	<xacro:property name="defaultdamping" value="0.0" />
+	<xacro:property name="defaultmu3" value="0.9" />
+
+
+
+	<!-- Link description -->
+
+	<link name="dummy_link" />
+	<!-- Because kdl parser doesn't accept a root link with inertia -->
+
+
+	<joint name="base_joint" type="fixed">
+		<parent link="dummy_link"/>
+		<child link="bottom_plate"/>
+	</joint>
+
+
+	<link name="bottom_plate">
+		<visual>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/base_noHole.stl" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin xyz="0 0 ${bodyPlateHeight/2}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/base_noHole.stl" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin xyz="0 0 ${bodyPlateHeight/2}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 ${bodyPlateHeight/2}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+			<mass value="${bodyPlateMass}"/>
+			<xacro:cylinder_inertia m="${bodyPlateMass}" r="${bodyPlateRadius}" h="${bodyPlateHeight}"/>
+		</inertial>
+	</link>
+	
+	
+	<joint name="imag0_joint" type="fixed">
+		<parent link="bottom_plate"/>
+		<child link="mid_plate"/>
+	</joint>
+	
+	
+	<link name="mid_plate">
+		<visual>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/base_noHole.stl" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin xyz="0 0 ${bodyPlateHeight/2+bodyPlateOffset0}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/base_noHole.stl" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin xyz="0 0 ${bodyPlateHeight/2+bodyPlateOffset0}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 ${bodyPlateHeight/2+bodyPlateOffset0}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+			<mass value="${bodyPlateMass}"/>
+			<xacro:cylinder_inertia m="${bodyPlateMass}" r="${bodyPlateRadius}" h="${bodyPlateHeight}"/>
+		</inertial>
+	</link>
+	
+	
+	<joint name="imag1_joint" type="fixed">
+		<parent link="mid_plate"/>
+		<child link="top_plate"/>
+	</joint>
+	
+	
+	<link name="top_plate">
+		<visual>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/base.stl" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin xyz="0 0 ${bodyPlateHeight/2+bodyPlateOffset0+bodyPlateOffset1}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/base.stl" scale="0.001 0.001 0.001"/>
+			</geometry>
+			<origin xyz="0 0 ${bodyPlateHeight/2+bodyPlateOffset0+bodyPlateOffset1}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 ${bodyPlateHeight/2+bodyPlateOffset0+bodyPlateOffset1}" rpy="1.5708 0 ${bodyPlateHexAngle}"/>
+			<mass value="${bodyPlateMass}"/>
+			<xacro:cylinder_inertia m="${bodyPlateMass}" r="${bodyPlateRadius}" h="${bodyPlateHeight}"/>
+		</inertial>
+	</link>
+	
+	
+	<joint name="imag2_joint" type="fixed">
+		<parent link="top_plate"/>
+		<child link="puck"/>
+		<origin xyz="0 0 ${bodyPlateHeight+bodyPlateOffset0+bodyPlateOffset1}" rpy="0 0 0"/>
+	</joint>
+		
+	<link name="puck">
+		<visual>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/puck.stl" scale="0.01 0.01 0.01"/>
+			</geometry>
+			<origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="package://cavex_hexapod/meshes/puck.stl" scale="0.01 0.01 0.01"/>
+			</geometry>
+			<origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
+		</collision>
+		<inertial>
+			<origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
+			<mass value="${puckMass}"/>
+			<xacro:cylinder_inertia m="${puckMass}" r="${puckRadius}" h="${puckHeight}"/>
+		</inertial>
+	</link>
+	
+
+	<!--Instantiation of legs and spacers that sweep 60deg in CW order from 30deg off +ve x-axis -->
+	
+	<xacro:leg prefix="AR" index="0"/>
+	<xacro:leg prefix="BR" index="1"/>
+	<xacro:leg prefix="CR" index="2"/>
+	<xacro:leg prefix="CL" index="3"/>
+	<xacro:leg prefix="BL" index="4"/>
+	<xacro:leg prefix="AL" index="5"/> 
+	
+	
+	<xacro:spacer0 prefix="A" index="0"/>
+	<xacro:spacer0 prefix="B" index="1"/>
+	<xacro:spacer0 prefix="C" index="2"/>
+	<xacro:spacer0 prefix="D" index="3"/>
+	<xacro:spacer0 prefix="E" index="4"/>
+	<xacro:spacer0 prefix="F" index="5"/>
+	
+	<xacro:spacer1 prefix="A" index="0"/>
+	<xacro:spacer1 prefix="B" index="1"/>
+	<xacro:spacer1 prefix="C" index="2"/>
+	<xacro:spacer1 prefix="D" index="3"/>
+	<xacro:spacer1 prefix="E" index="4"/>
+	<xacro:spacer1 prefix="F" index="5"/>
+	
+
+</robot>
