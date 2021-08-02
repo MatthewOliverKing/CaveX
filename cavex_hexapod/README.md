@@ -5,7 +5,7 @@ This repository was modified from the CSIRO's csiro-robotics/bullet_syropod repo
 CaveX is a Mechanical Engineering Honours Group at the University of Adelaide, South Australia. We have designed and are building a semi-autonomous robot for mapping cave systems such as the Naracoorte Cavex using SLAM and LiDAR. We are using a Velodyne PUCK, Dynamixel XL servos and a Jetson Nano and OpenCR1.0 control boards.
 
 Here is the beautiful Alexandra Cave with active formations.
-[Naracoorte Caves](https://i.imgur.com/5aG7TQX.jpg)
+![Naracoorte Caves](https://i.imgur.com/5aG7TQX.jpg)
 
 Here's the team doing a scan.
 [Scanning](https://i.imgur.com/souMcaw.jpg)
