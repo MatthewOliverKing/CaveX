@@ -5,15 +5,19 @@ CaveX is a Mechanical Engineering Honours Group at the University of Adelaide, S
 We have designed and are building a semi-autonomous robot for mapping cave systems such as the Naracoorte Cavex using SLAM and LiDAR. We are using a Velodyne PUCK, Dynamixel XL servos and a Jetson Nano and OpenCR1.0 control boards.
 
 Here is the beautiful Alexandra Cave with active formations.
+
 <img src="https://i.imgur.com/5aG7TQX.jpg" width="400">
 
 Here's the team doing a scan.
+
 <img src="https://i.imgur.com/souMcaw.jpg" width="400">
 
 Here's the Naracoorte Cave system map courtesy of Craig Williams (UofA) that we are aiming to contribute to.
+
 <img src="https://i.imgur.com/kqwxnCC.png" width="400">
 
 Here is a photo of our hardware.
+
 <img src="https://i.imgur.com/vYjLxoT.jpg" width="400">   <img src="https://i.imgur.com/CqoPcQf.jpg" width="400">
 
 ## Issues
