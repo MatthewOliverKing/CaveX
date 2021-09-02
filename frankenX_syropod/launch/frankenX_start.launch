@@ -1,0 +1,12 @@
+<!-- -*- xml -*- -->
+
+<launch>
+
+	<!-- Motor drivers and controllers -->
+	<include file="$(find frankenX_syropod)/launch/frankenX_hardware.launch" />
+
+	<!-- Highlevel control -->
+	<include file="$(find frankenX_syropod)/launch/frankenX_highlevel.launch" />
+
+</launch>
+ 

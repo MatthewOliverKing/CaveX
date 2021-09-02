@@ -1,0 +1,11 @@
+<!-- -*- xml -*- -->
+
+<launch>
+
+	<!-- Motor drivers and controllers -->
+	<include file="$(find frankenX_syropod)/launch/dynamixel_controller_manager.launch" />
+	<include file="$(find frankenX_syropod)/launch/dynamixel_controller_spawner.launch" />
+
+</launch>
+ 
+

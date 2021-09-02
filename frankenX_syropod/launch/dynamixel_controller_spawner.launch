@@ -1,0 +1,35 @@
+<!-- -*- mode: XML -*- -->
+
+<launch>
+    <!-- Load controller configuration to parameter server -->
+    <rosparam file="$(find frankenX_syropod)/config/frankenX_motors.yaml" command="load"/>
+    <include file="$(find dynamixel_joint_states_publisher)/launch/joint_states_publisher.launch" />
+        
+	
+    <!-- start specified joint controllers -->
+    <node name="dynamixel_controller_spawner" pkg="dynamixel_controllers" type="controller_spawner.py"
+          args="--manager=dxl_manager
+                --port=dynamixel_port              
+                --type=simple
+                /syropod/AL_coxa_joint
+                /syropod/AL_femur_joint
+                /syropod/AL_tibia_joint
+                /syropod/AR_coxa_joint
+                /syropod/AR_femur_joint
+                /syropod/AR_tibia_joint
+                /syropod/BL_coxa_joint
+                /syropod/BL_femur_joint
+                /syropod/BL_tibia_joint
+                /syropod/BR_coxa_joint
+                /syropod/BR_femur_joint
+                /syropod/BR_tibia_joint
+                /syropod/CL_coxa_joint
+                /syropod/CL_femur_joint
+                /syropod/CL_tibia_joint
+                /syropod/CR_coxa_joint
+                /syropod/CR_femur_joint
+                /syropod/CR_tibia_joint"
+          output="screen"
+    />
+
+</launch>
