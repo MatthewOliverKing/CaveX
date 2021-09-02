@@ -12,7 +12,9 @@ Here's the Naracoorte Cave system map courtesy of Craig Williams (UofA) that we 
 ![Cave Map](https://i.imgur.com/kqwxnCC.png)
 
 Here is a photo of our hardware.
-[![Hardware](https://i.imgur.com/vYjLxoT.jpg)] [![Testing]](https://i.imgur.com/CqoPcQf.jpg)
+<img src="https://i.imgur.com/vYjLxoT.jpg" width="100">
+<img src="https://i.imgur.com/CqoPcQf.jpg" width="100">
+[Hardware](https://i.imgur.com/vYjLxoT.jpg) ![Testing](https://i.imgur.com/CqoPcQf.jpg)
 
 ## Issues
 
