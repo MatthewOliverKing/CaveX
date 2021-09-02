@@ -11,22 +11,19 @@ Here's the team doing a scan.
 Here's the Naracoorte Cave system map courtesy of Craig Williams (UofA) that we are aiming to contribute to.
 ![Cave Map](https://i.imgur.com/kqwxnCC.png)
 
+Here is a photo of our hardware.
+![Hardware](https://i.imgur.com/vYjLxoT.jpg) ![Testing](https://i.imgur.com/CqoPcQf.jpg)
+
 ## Issues
 
 Due to the XL-430-w250t and 2XL-430-w250t servos using a different control table to earlier motors, OpenSHC is not yet working fully on hardware. 
 
 ## Authors
 
-The repos in this project are forked from CSIRO-Robotic's repos.
-
-Original:
-* Samith Ashan
-* Benjamin Tam
-* etc.
-
-Modified by:
 * Matthew King
+* Hayden Lee
+* Jesse Cooper
+* Aaron Thomas
+* Cameron Natt
 
-## License
-
-This project is licensed under the CSIRO Open Source Software Licence Agreement (variation of the BSD / MIT License) - see the [LICENSE](LICENSE) file for details.
+Many of the repos in this project are forked from CSIRO-Robotic's repos.
