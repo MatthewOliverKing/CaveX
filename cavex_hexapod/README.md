@@ -1,6 +1,28 @@
 # CaveX Hexapod
 
-This repository was modified from the CSIRO's csiro-robotics/bullet_syropod repository https://github.com/csiro-robotics/bullet_syropod. It contains the configuration, model and launch files specific to the CaveX robot.
+This repo is a ROS Rviz and Gazebo simulation of the CaveX Hexapod using OpenSHC gait control. It was modified from the CSIRO's csiro-robotics/bullet_syropod repository https://github.com/csiro-robotics/bullet_syropod. It contains the configuration, model and launch files specific to the CaveX robot.
+
+## Requirements
+
+* Ubuntu 18.04 LTS
+* ROS Melodic
+
+## Dependencies
+
+### Base
+
+* [Syropod High-level Controller](https://github.com/csiro-robotics/syropod_highlevel_controller):
+  * `git clone https://github.com/csiro-robotics/syropod_highlevel_controller.git`
+* [Syropod Remote](https://github.com/csiro-robotics/syropod_remote):
+  * `git clone https://github.com/csiro-robotics/syropod_remote.git`
+
+### Control Input
+
+* [ROS Joystick](http://wiki.ros.org/joy)
+  * `sudo apt-get install ros-melodic-joy`
+* [RQT Reconfigure Control](https://github.com/csiro-robotics/syropod_rqt_reconfigure_control) (Optional):
+  * `git clone https://github.com/csiro-robotics/syropod_rqt_reconfigure_control.git`
+
 
 ## Issues
 
