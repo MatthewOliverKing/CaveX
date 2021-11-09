@@ -1,6 +1,8 @@
 # CaveX
 
-CaveX is a Mechanical Engineering Honours Group at the University of Adelaide, South Australia. This is where all of our software lives.
+For the current CaveX Project, see github.com/cavex.
+
+CaveX is a Mechanical Engineering Honours Group at the University of Adelaide, South Australia. This is my copy of my team's software as of September 2021.
 
 We have designed and are building a semi-autonomous robot for mapping cave systems such as the Naracoorte Cavex using SLAM and LiDAR. We are using a Velodyne PUCK, Dynamixel XL servos and a Jetson Nano and OpenCR1.0 control boards.
 
